@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<body style="margin:0px;">
+<div id="my2Canvas" width="fit-content" height="fit-content" style="width:fit-content;height:fit-content;border:1px solid #d3d3d3;">
+<canvas id="myCanvas" style="position:absolute;top:0px;transform-origin:0 0;scale:10;image-rendering: pixelated;display:block;" width="32px" height="32px"
+style="border:1px solid #d3d3d3;">
+Your browser does not support the canvas element.
+</canvas>
+
+<div style="position:absolute;border:1px solid green;width:1px;height:1px;" id="ss"></div>
+</div>
+<script>
+
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+
+ctx.imageSmoothingEnabled = false;
+ctx.fillStyle = "#111";
+ctx.fillRect( 0, 0, 1, 1 );
+function clear(){
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+canvas.addEventListener("mousemove", function (event) {
+    var b = canvas.getBoundingClientRect();
+    var r = document.getElementById("ss").getBoundingClientRect();
+    var scale = canvas.width / parseFloat(b.width);
+    var x = (event.clientX - b.left) * scale;
+    var y = (event.clientY - b.top) * scale;
+    // Marks mouse position
+    var ctx = canvas.getContext("2d");
+    console.log(x.toFixed(0),y.toFixed(0),scale)
+    document.getElementById("ss").style.height = 0.9 / scale +"px"
+    document.getElementById("ss").style.width = 0.9 / scale +"px"
+	document.getElementById("ss").style.top = Math.floor(event.clientY/(1 / scale))*(1 / scale)+"px"
+    document.getElementById("ss").style.left = Math.floor(event.clientX/(1 / scale))*(1 / scale)+"px"
+    //ctx.fillRect( Math.floor(x), Math.floor(y), 1, 1 );
+    var imgData = ctx.createImageData(1, 1);
+
+	var i;
+	for (i = 0; i < imgData.data.length; i += 4) {
+    imgData.data[i+0] = 255;
+    imgData.data[i+1] = 0;
+    imgData.data[i+2] = 0;
+    imgData.data[i+3] = 255;
+  }
+
+	ctx.putImageData(imgData, Math.floor(x), Math.floor(y));
+});
+</script>
+
+</body>
+</html>
